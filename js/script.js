@@ -114,15 +114,98 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // Project Card Glow Effect
-    document.querySelectorAll('.project-card').forEach(card => {
+    // Project Card Tilt & Glow Effect
+    const projectCards = document.querySelectorAll('.project-card');
+
+    projectCards.forEach(card => {
+        const inner = card.querySelector('.project-card-inner');
+
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
+
+            // Glow effect
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
+
+            // Tilt effect (Desktop only)
+            if (window.matchMedia("(hover: hover) and (min-width: 768px)").matches && inner) {
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                // Calculate rotation based on mouse position
+                // Max rotation: 10 degrees
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
+
+                inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            }
         });
+
+        card.addEventListener('mouseenter', () => {
+            document.body.classList.add('cursor-view-active');
+            if (inner) {
+                inner.style.transition = 'transform 0.1s ease-out';
+            }
+        });
+
+        card.addEventListener('mouseleave', () => {
+            document.body.classList.remove('cursor-view-active');
+
+            // Smooth reset transition
+            if (inner) {
+                inner.style.transition = 'transform 0.5s ease-out';
+                inner.style.transform = 'rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            }
+
+            // Stop flower animation for Vitalia
+            if (card.dataset.theme === 'vitalia') {
+                clearInterval(card.flowerInterval);
+                // Smooth fade out for existing sparkles
+                const existingSparkles = card.querySelectorAll('.sparkle');
+                existingSparkles.forEach(s => {
+                    if (s.removeTimeout) clearTimeout(s.removeTimeout); // Prevent abrupt natural death
+                    s.classList.add('fade-out');
+                    setTimeout(() => s.remove(), 600);
+                });
+            }
+        });
+
+        // Vitalia Flower Animation
+        if (card.dataset.theme === 'vitalia') {
+            card.addEventListener('mouseenter', () => {
+                const colors = ['#70eeffff', '#ff6fb7ff', '#a748ffff', '#ff8b6eff'];
+
+                card.flowerInterval = setInterval(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle');
+
+                    // Random properties
+                    const size = Math.random() * 4 + 2; // 2px to 6px
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const rect = card.getBoundingClientRect();
+                    const randomX = Math.random() * (rect.width - 20) + 10;
+                    const randomY = Math.random() * (rect.height - 20) + 10;
+
+                    sparkle.style.width = `${size}px`;
+                    sparkle.style.height = `${size}px`;
+                    sparkle.style.backgroundColor = color;
+                    sparkle.style.color = color; // For box-shadow
+                    sparkle.style.left = `${randomX}px`;
+                    sparkle.style.top = `${randomY}px`;
+
+                    // Add to card
+                    card.querySelector('.project-card-inner').appendChild(sparkle);
+
+                    // Remove after animation (matches CSS animation time)
+                    // Save timeout ID to clear it if user leaves hover
+                    sparkle.removeTimeout = setTimeout(() => {
+                        sparkle.remove();
+                    }, 3000);
+                }, 200); // Frequency: every 100ms
+            });
+        }
     });
 
     // Preloader
@@ -138,131 +221,133 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hero Organic Gradient Animation (Aurora Effect)
     const canvas = document.getElementById('hero-canvas');
-    const ctx = canvas.getContext('2d');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
 
-    let width, height;
-    let particles = [];
+        let width, height;
+        let particles = [];
 
-    // Mouse tracking for interaction
-    let mouse = { x: undefined, y: undefined };
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.x;
-        mouse.y = e.y;
-    });
+        // Mouse tracking for interaction
+        let mouse = { x: undefined, y: undefined };
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
 
-    // Aurora Configuration
-    const config = {
-        particleCount: 20, // Reduced from 60
-        baseSize: 400, // Increased from 200 for a wash/mesh effect
-        colors: [
-            { h: 230, s: 60, l: 30 }, // Deep Blue
-            { h: 260, s: 60, l: 40 }, // Purple
-            { h: 300, s: 70, l: 45 }, // Magenta
-            { h: 190, s: 80, l: 40 }  // Cyan/Teal
-        ],
-        speed: 0.001 // Slowed down significantly
-    };
+        // Aurora Configuration
+        const config = {
+            particleCount: 20, // Reduced from 60
+            baseSize: 400, // Increased from 200 for a wash/mesh effect
+            colors: [
+                { h: 230, s: 60, l: 30 }, // Deep Blue
+                { h: 260, s: 60, l: 40 }, // Purple
+                { h: 300, s: 70, l: 45 }, // Magenta
+                { h: 190, s: 80, l: 40 }  // Cyan/Teal
+            ],
+            speed: 0.001 // Slowed down significantly
+        };
 
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    class Particle {
-        constructor() {
-            this.reset();
-            // Start at random positions to avoid "bunched" start
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.angle = Math.random() * Math.PI * 2;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         }
 
-        reset() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.size = Math.random() * config.baseSize + 200; // Larger range
-            this.angle = Math.random() * Math.PI * 2;
-            this.spin = (Math.random() - 0.5) * 0.001; // Slower spin
+        window.addEventListener('resize', resize);
+        resize();
 
-            const color = config.colors[Math.floor(Math.random() * config.colors.length)];
-            this.hsla = `hsla(${color.h}, ${color.s}%, ${color.l}%, 0.2)`; // Lower opacity
-        }
+        class Particle {
+            constructor() {
+                this.reset();
+                // Start at random positions to avoid "bunched" start
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.angle = Math.random() * Math.PI * 2;
+            }
 
-        update(time) {
-            // Organic movement using sine waves
-            this.angle += this.spin;
-            this.x += Math.cos(this.angle + time * config.speed) * 1.5;
-            this.y += Math.sin(this.angle + time * config.speed) * 1.5;
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * config.baseSize + 200; // Larger range
+                this.angle = Math.random() * Math.PI * 2;
+                this.spin = (Math.random() - 0.5) * 0.001; // Slower spin
 
-            // Wrap around screen for continuous flow
-            if (this.x < -this.size) this.x = width + this.size;
-            if (this.x > width + this.size) this.x = -this.size;
-            if (this.y < -this.size) this.y = height + this.size;
-            if (this.y > height + this.size) this.y = -this.size;
+                const color = config.colors[Math.floor(Math.random() * config.colors.length)];
+                this.hsla = `hsla(${color.h}, ${color.s}%, ${color.l}%, 0.2)`; // Lower opacity
+            }
 
-            // Gentle mouse interaction repulse
-            if (mouse.x && mouse.y) {
-                const dx = mouse.x - this.x;
-                const dy = mouse.y - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 400) {
-                    const force = (400 - dist) / 400;
-                    this.x -= (dx / dist) * force * 2;
-                    this.y -= (dy / dist) * force * 2;
+            update(time) {
+                // Organic movement using sine waves
+                this.angle += this.spin;
+                this.x += Math.cos(this.angle + time * config.speed) * 1.5;
+                this.y += Math.sin(this.angle + time * config.speed) * 1.5;
+
+                // Wrap around screen for continuous flow
+                if (this.x < -this.size) this.x = width + this.size;
+                if (this.x > width + this.size) this.x = -this.size;
+                if (this.y < -this.size) this.y = height + this.size;
+                if (this.y > height + this.size) this.y = -this.size;
+
+                // Gentle mouse interaction repulse
+                if (mouse.x && mouse.y) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 400) {
+                        const force = (400 - dist) / 400;
+                        this.x -= (dx / dist) * force * 2;
+                        this.y -= (dy / dist) * force * 2;
+                    }
                 }
+            }
+
+            draw() {
+                ctx.beginPath();
+                // Create a soft, glowing gradient for each particle
+                const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                g.addColorStop(0, this.hsla);
+                g.addColorStop(1, 'rgba(0,0,0,0)');
+
+                ctx.fillStyle = g;
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
-        draw() {
-            ctx.beginPath();
-            // Create a soft, glowing gradient for each particle
-            const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-            g.addColorStop(0, this.hsla);
-            g.addColorStop(1, 'rgba(0,0,0,0)');
-
-            ctx.fillStyle = g;
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < config.particleCount; i++) {
+                particles.push(new Particle());
+            }
         }
-    }
 
-    function initParticles() {
-        particles = [];
-        for (let i = 0; i < config.particleCount; i++) {
-            particles.push(new Particle());
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            time++;
+
+            // Clear with a very slight fade for trailing effect (optional, here we just clear)
+            ctx.clearRect(0, 0, width, height);
+
+            // Blending mode for "glow" effect
+            ctx.globalCompositeOperation = 'hard-light'; // or 'screen', 'overlay'
+
+            // Draw background base color if needed (optional)
+            // ctx.fillStyle = '#050505';
+            // ctx.fillRect(0,0,width,height);
+
+            particles.forEach(p => {
+                p.update(time);
+                p.draw();
+            });
+
+            ctx.globalCompositeOperation = 'source-over';
         }
+
+        initParticles();
+        animate();
     }
-
-    let time = 0;
-    function animate() {
-        requestAnimationFrame(animate);
-        time++;
-
-        // Clear with a very slight fade for trailing effect (optional, here we just clear)
-        ctx.clearRect(0, 0, width, height);
-
-        // Blending mode for "glow" effect
-        ctx.globalCompositeOperation = 'hard-light'; // or 'screen', 'overlay'
-
-        // Draw background base color if needed (optional)
-        // ctx.fillStyle = '#050505';
-        // ctx.fillRect(0,0,width,height);
-
-        particles.forEach(p => {
-            p.update(time);
-            p.draw();
-        });
-
-        ctx.globalCompositeOperation = 'source-over';
-    }
-
-    initParticles();
-    animate();
 
     // Magnetic Buttons Effect (Desktop Only)
     if (window.matchMedia("(hover: hover)").matches) {
@@ -317,6 +402,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "about.title": "About Me",
             "about.text": "I am a passionate developer focused on creating smooth, user-centric web experiences. My work blends technical expertise with a keen eye for modern design aesthetics.",
             "projects.title": "Selected Projects",
+            "project_vitalia.title": "Vitalia",
+            "project_vitalia.desc": "AI-powered wellness platform offering personalized plans and real-time support.",
             "project1.title": "Project One",
             "project1.desc": "A minimalist e-commerce platform.",
             "project2.title": "Project Two",
@@ -343,6 +430,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "about.title": "Sobre Mí",
             "about.text": "Soy una desarrolladora apasionada enfocada en crear experiencias web fluidas y centradas en el usuario. Mi trabajo combina experiencia técnica con un ojo agudo para la estética del diseño moderno.",
             "projects.title": "Proyectos Seleccionados",
+            "project_vitalia.title": "Vitalia",
+            "project_vitalia.desc": "Plataforma de bienestar con IA que crea planes personalizados y soporte en tiempo real.",
             "project1.title": "Proyecto Uno",
             "project1.desc": "Una plataforma de comercio electrónico minimalista.",
             "project2.title": "Proyecto Dos",
@@ -361,34 +450,33 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const langToggle = document.getElementById('lang-toggle');
-    let currentLang = localStorage.getItem('lang') || 'en';
+    if (langToggle) {
+        let currentLang = localStorage.getItem('lang') || 'en';
 
-    function updateLanguage(lang) {
-        // Update all text with data-i18n attribute
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (translations[lang] && translations[lang][key]) {
-                el.innerHTML = translations[lang][key];
-            }
+        function updateLanguage(lang) {
+            // Update all text with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Update Button Text to show the *other* language option or current?
+            langToggle.innerText = lang === 'en' ? 'ES' : 'EN';
+
+            // Save preference
+            localStorage.setItem('lang', lang);
+            currentLang = lang;
+        }
+
+        // Initialize
+        updateLanguage(currentLang);
+
+        // Event Listener
+        langToggle.addEventListener('click', () => {
+            const newLang = currentLang === 'en' ? 'es' : 'en';
+            updateLanguage(newLang);
         });
-
-        // Update Button Text to show the *other* language option or current?
-        // Let's show current state but toggle on click. 
-        // If current is EN, button says ES (switch to ES).
-        // If current is ES, button says EN (switch to EN).
-        langToggle.innerText = lang === 'en' ? 'ES' : 'EN';
-
-        // Save preference
-        localStorage.setItem('lang', lang);
-        currentLang = lang;
     }
-
-    // Initialize
-    updateLanguage(currentLang);
-
-    // Event Listener
-    langToggle.addEventListener('click', () => {
-        const newLang = currentLang === 'en' ? 'es' : 'en';
-        updateLanguage(newLang);
-    });
 });
