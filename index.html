@@ -31,10 +31,11 @@
         <div class="container">
             <a href="#" class="logo" data-magnetic>GM.</a>
             <ul class="nav-links">
-                <li><a href="#about" data-magnetic>About</a></li>
-                <li><a href="#projects" data-magnetic>Projects</a></li>
-                <li><a href="#skills" data-magnetic>Skills</a></li>
-                <li><a href="#contact" data-magnetic>Contact</a></li>
+                <li><a href="#about" data-magnetic data-i18n="nav.about">About</a></li>
+                <li><a href="#projects" data-magnetic data-i18n="nav.projects">Projects</a></li>
+                <li><a href="#skills" data-magnetic data-i18n="nav.skills">Skills</a></li>
+                <li><a href="#contact" data-magnetic data-i18n="nav.contact">Contact</a></li>
+                <li><button id="lang-toggle" class="lang-toggle" data-magnetic>ES</button></li>
             </ul>
             <div class="hamburger" data-magnetic>
                 <span></span>
@@ -52,12 +53,13 @@
                 <h1 class="hero-title">Graciana March</h1>
             </div>
             <div class="reveal-text">
-                <h2 class="hero-subtitle">Web Developer & Designer</h2>
+                <h2 class="hero-subtitle" data-i18n="hero.subtitle">Web Developer & Designer</h2>
             </div>
             <div class="reveal-text">
-                <p class="hero-description">Designing elegant, interactive, and minimalist digital experiences.</p>
+                <p class="hero-description" data-i18n="hero.description">Designing elegant, interactive, and minimalist
+                    digital experiences.</p>
             </div>
-            <a href="#projects" class="btn btn-primary" data-magnetic>View Work</a>
+            <a href="#projects" class="btn btn-primary" data-magnetic data-i18n="hero.cta">View Work</a>
         </div>
         <div class="hero-background-elements">
             <div class="glow-orb orb-1"></div>
@@ -69,12 +71,13 @@
     <section id="about" class="section">
         <div class="container">
             <div class="reveal-text">
-                <h2 class="section-title">About Me</h2>
+                <h2 class="section-title" data-i18n="about.title">About Me</h2>
             </div>
             <div class="about-content">
                 <div class="about-text">
                     <div class="reveal-text">
-                        <p>I am a passionate developer focused on creating smooth, user-centric web experiences. My work
+                        <p data-i18n="about.text">I am a passionate developer focused on creating smooth, user-centric
+                            web experiences. My work
                             blends technical expertise with a keen eye for modern design aesthetics.</p>
                     </div>
                 </div>
@@ -86,31 +89,31 @@
     <section id="projects" class="section">
         <div class="container">
             <div class="reveal-text">
-                <h2 class="section-title">Selected Projects</h2>
+                <h2 class="section-title" data-i18n="projects.title">Selected Projects</h2>
             </div>
             <div class="projects-grid">
                 <!-- Project Card 1 -->
                 <div class="project-card">
                     <div class="project-content">
-                        <h3>Project One</h3>
-                        <p>A minimalist e-commerce platform.</p>
-                        <a href="#" class="project-link">View Project</a>
+                        <h3 data-i18n="project1.title">Project One</h3>
+                        <p data-i18n="project1.desc">A minimalist e-commerce platform.</p>
+                        <a href="#" class="project-link" data-i18n="projects.view">View Project</a>
                     </div>
                 </div>
                 <!-- Project Card 2 -->
                 <div class="project-card">
                     <div class="project-content">
-                        <h3>Project Two</h3>
-                        <p>Interactive portfolio dashboard.</p>
-                        <a href="#" class="project-link">View Project</a>
+                        <h3 data-i18n="project2.title">Project Two</h3>
+                        <p data-i18n="project2.desc">Interactive portfolio dashboard.</p>
+                        <a href="#" class="project-link" data-i18n="projects.view">View Project</a>
                     </div>
                 </div>
                 <!-- Project Card 3 -->
                 <div class="project-card">
                     <div class="project-content">
-                        <h3>Project Three</h3>
-                        <p>Real-time data visualization app.</p>
-                        <a href="#" class="project-link">View Project</a>
+                        <h3 data-i18n="project3.title">Project Three</h3>
+                        <p data-i18n="project3.desc">Real-time data visualization app.</p>
+                        <a href="#" class="project-link" data-i18n="projects.view">View Project</a>
                     </div>
                 </div>
             </div>
@@ -121,7 +124,7 @@
     <section id="skills" class="section">
         <div class="container">
             <div class="reveal-text">
-                <h2 class="section-title">Technical Skills</h2>
+                <h2 class="section-title" data-i18n="skills.title">Technical Skills</h2>
             </div>
             <div class="skills-wrapper">
                 <span class="skill-tag" data-magnetic>HTML5</span>
@@ -139,22 +142,23 @@
     <section id="contact" class="section">
         <div class="container">
             <div class="reveal-text">
-                <h2 class="section-title">Get in Touch</h2>
+                <h2 class="section-title" data-i18n="contact.title">Get in Touch</h2>
             </div>
             <form class="contact-form">
                 <div class="form-group">
                     <input type="text" id="name" required placeholder=" ">
-                    <label for="name">Name</label>
+                    <label for="name" data-i18n="contact.name">Name</label>
                 </div>
                 <div class="form-group">
                     <input type="email" id="email" required placeholder=" ">
-                    <label for="email">Email</label>
+                    <label for="email" data-i18n="contact.email">Email</label>
                 </div>
                 <div class="form-group">
                     <textarea id="message" required placeholder=" "></textarea>
-                    <label for="message">Message</label>
+                    <label for="message" data-i18n="contact.message">Message</label>
                 </div>
-                <button type="submit" class="btn btn-primary" data-magnetic>Send Message</button>
+                <button type="submit" class="btn btn-primary" data-magnetic data-i18n="contact.send">Send
+                    Message</button>
             </form>
             <div class="social-links">
                 <a href="https://www.linkedin.com/in/gracimarch/" target="_blank" class="social-link"
@@ -167,7 +171,7 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Graciana March. Built with minimalist precision.</p>
+            <p data-i18n="footer.text">&copy; 2024 Graciana March. Built with minimalist precision.</p>
         </div>
     </footer>
 

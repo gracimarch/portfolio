@@ -303,4 +303,92 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.1 });
 
     revealElements.forEach(el => revealObserverGeneric.observe(el));
+
+    // Language Switcher
+    const translations = {
+        en: {
+            "nav.about": "About",
+            "nav.projects": "Projects",
+            "nav.skills": "Skills",
+            "nav.contact": "Contact",
+            "hero.subtitle": "Web Developer & Designer",
+            "hero.description": "Designing elegant, interactive, and minimalist digital experiences.",
+            "hero.cta": "View Work",
+            "about.title": "About Me",
+            "about.text": "I am a passionate developer focused on creating smooth, user-centric web experiences. My work blends technical expertise with a keen eye for modern design aesthetics.",
+            "projects.title": "Selected Projects",
+            "project1.title": "Project One",
+            "project1.desc": "A minimalist e-commerce platform.",
+            "project2.title": "Project Two",
+            "project2.desc": "Interactive portfolio dashboard.",
+            "project3.title": "Project Three",
+            "project3.desc": "Real-time data visualization app.",
+            "projects.view": "View Project",
+            "skills.title": "Technical Skills",
+            "contact.title": "Get in Touch",
+            "contact.name": "Name",
+            "contact.email": "Email",
+            "contact.message": "Message",
+            "contact.send": "Send Message",
+            "footer.text": "&copy; 2024 Graciana March. Built with minimalist precision."
+        },
+        es: {
+            "nav.about": "Sobre Mí",
+            "nav.projects": "Proyectos",
+            "nav.skills": "Habilidades",
+            "nav.contact": "Contacto",
+            "hero.subtitle": "Desarrolladora Web y Diseñadora",
+            "hero.description": "Diseñando experiencias digitales elegantes, interactivas y minimalistas.",
+            "hero.cta": "Ver Trabajo",
+            "about.title": "Sobre Mí",
+            "about.text": "Soy una desarrolladora apasionada enfocada en crear experiencias web fluidas y centradas en el usuario. Mi trabajo combina experiencia técnica con un ojo agudo para la estética del diseño moderno.",
+            "projects.title": "Proyectos Seleccionados",
+            "project1.title": "Proyecto Uno",
+            "project1.desc": "Una plataforma de comercio electrónico minimalista.",
+            "project2.title": "Proyecto Dos",
+            "project2.desc": "Panel de portafolio interactivo.",
+            "project3.title": "Proyecto Tres",
+            "project3.desc": "Aplicación de visualización de datos en tiempo real.",
+            "projects.view": "Ver Proyecto",
+            "skills.title": "Habilidades Técnicas",
+            "contact.title": "Contáctame",
+            "contact.name": "Nombre",
+            "contact.email": "Correo",
+            "contact.message": "Mensaje",
+            "contact.send": "Enviar Mensaje",
+            "footer.text": "&copy; 2024 Graciana March. Construido con precisión minimalista."
+        }
+    };
+
+    const langToggle = document.getElementById('lang-toggle');
+    let currentLang = localStorage.getItem('lang') || 'en';
+
+    function updateLanguage(lang) {
+        // Update all text with data-i18n attribute
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                el.innerHTML = translations[lang][key];
+            }
+        });
+
+        // Update Button Text to show the *other* language option or current?
+        // Let's show current state but toggle on click. 
+        // If current is EN, button says ES (switch to ES).
+        // If current is ES, button says EN (switch to EN).
+        langToggle.innerText = lang === 'en' ? 'ES' : 'EN';
+
+        // Save preference
+        localStorage.setItem('lang', lang);
+        currentLang = lang;
+    }
+
+    // Initialize
+    updateLanguage(currentLang);
+
+    // Event Listener
+    langToggle.addEventListener('click', () => {
+        const newLang = currentLang === 'en' ? 'es' : 'en';
+        updateLanguage(newLang);
+    });
 });
