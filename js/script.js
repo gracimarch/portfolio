@@ -136,134 +136,157 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Hero Organic Gradient Animation
+    // Hero Organic Gradient Animation (Aurora Effect)
     const canvas = document.getElementById('hero-canvas');
     const ctx = canvas.getContext('2d');
 
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
+    let width, height;
+    let particles = [];
 
-    let mouse = {
-        x: undefined,
-        y: undefined
-    };
-
+    // Mouse tracking for interaction
+    let mouse = { x: undefined, y: undefined };
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.x;
         mouse.y = e.y;
     });
 
-    window.addEventListener('resize', () => {
+    // Aurora Configuration
+    const config = {
+        particleCount: 20, // Reduced from 60
+        baseSize: 400, // Increased from 200 for a wash/mesh effect
+        colors: [
+            { h: 230, s: 60, l: 30 }, // Deep Blue
+            { h: 260, s: 60, l: 40 }, // Purple
+            { h: 300, s: 70, l: 45 }, // Magenta
+            { h: 190, s: 80, l: 40 }  // Cyan/Teal
+        ],
+        speed: 0.001 // Slowed down significantly
+    };
+
+    function resize() {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
-    });
+    }
 
-    class Blob {
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
         constructor() {
+            this.reset();
+            // Start at random positions to avoid "bunched" start
             this.x = Math.random() * width;
             this.y = Math.random() * height;
-            this.size = Math.random() * 200 + 150;
-            this.vx = (Math.random() - 0.5) * 1.5;
-            this.vy = (Math.random() - 0.5) * 1.5;
-            this.colors = [
-                `hsla(${Math.random() * 60 + 200}, 70%, 50%, 0.4)`, // Purples
-                `hsla(${Math.random() * 60 + 260}, 70%, 50%, 0.4)`  // Blues/Violets
-            ];
-            this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
-            this.originalSize = this.size;
+            this.angle = Math.random() * Math.PI * 2;
         }
 
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
+        reset() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.size = Math.random() * config.baseSize + 200; // Larger range
+            this.angle = Math.random() * Math.PI * 2;
+            this.spin = (Math.random() - 0.5) * 0.001; // Slower spin
 
-            // Bounce off edges
-            if (this.x < -this.size || this.x > width + this.size) this.vx *= -1;
-            if (this.y < -this.size || this.y > height + this.size) this.vy *= -1;
+            const color = config.colors[Math.floor(Math.random() * config.colors.length)];
+            this.hsla = `hsla(${color.h}, ${color.s}%, ${color.l}%, 0.2)`; // Lower opacity
+        }
 
-            // Mouse interaction
-            if (mouse.x !== undefined && mouse.y !== undefined) {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                let interactionRadius = 400;
+        update(time) {
+            // Organic movement using sine waves
+            this.angle += this.spin;
+            this.x += Math.cos(this.angle + time * config.speed) * 1.5;
+            this.y += Math.sin(this.angle + time * config.speed) * 1.5;
 
-                if (distance < interactionRadius) {
-                    const forceDirectionX = dx / distance;
-                    const forceDirectionY = dy / distance;
-                    const force = (interactionRadius - distance) / interactionRadius;
-                    const directionX = forceDirectionX * force * 3; // Push strength
-                    const directionY = forceDirectionY * force * 3;
+            // Wrap around screen for continuous flow
+            if (this.x < -this.size) this.x = width + this.size;
+            if (this.x > width + this.size) this.x = -this.size;
+            if (this.y < -this.size) this.y = height + this.size;
+            if (this.y > height + this.size) this.y = -this.size;
 
-                    this.x -= directionX;
-                    this.y -= directionY;
-
-                    // Slightly increase size on interaction
-                    if (this.size < this.originalSize + 20) {
-                        this.size += 1;
-                    }
-                } else {
-                    if (this.size > this.originalSize) {
-                        this.size -= 1;
-                    }
+            // Gentle mouse interaction repulse
+            if (mouse.x && mouse.y) {
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 400) {
+                    const force = (400 - dist) / 400;
+                    this.x -= (dx / dist) * force * 2;
+                    this.y -= (dy / dist) * force * 2;
                 }
             }
         }
 
         draw() {
             ctx.beginPath();
-            const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-            gradient.addColorStop(0, this.color);
-            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            // Create a soft, glowing gradient for each particle
+            const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+            g.addColorStop(0, this.hsla);
+            g.addColorStop(1, 'rgba(0,0,0,0)');
 
-            ctx.fillStyle = gradient;
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+            ctx.fillStyle = g;
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
         }
     }
 
-    const blobs = [];
-    for (let i = 0; i < 6; i++) {
-        blobs.push(new Blob());
+    function initParticles() {
+        particles = [];
+        for (let i = 0; i < config.particleCount; i++) {
+            particles.push(new Particle());
+        }
     }
 
-    function animateBlobs() {
-        requestAnimationFrame(animateBlobs);
+    let time = 0;
+    function animate() {
+        requestAnimationFrame(animate);
+        time++;
+
+        // Clear with a very slight fade for trailing effect (optional, here we just clear)
         ctx.clearRect(0, 0, width, height);
 
-        ctx.globalCompositeOperation = 'screen';
+        // Blending mode for "glow" effect
+        ctx.globalCompositeOperation = 'hard-light'; // or 'screen', 'overlay'
 
-        blobs.forEach(blob => {
-            blob.update();
-            blob.draw();
+        // Draw background base color if needed (optional)
+        // ctx.fillStyle = '#050505';
+        // ctx.fillRect(0,0,width,height);
+
+        particles.forEach(p => {
+            p.update(time);
+            p.draw();
         });
 
         ctx.globalCompositeOperation = 'source-over';
     }
 
-    animateBlobs();
+    initParticles();
+    animate();
 
-    // Magnetic Buttons Effect
-    const magneticBtns = document.querySelectorAll('[data-magnetic]');
+    // Magnetic Buttons Effect (Desktop Only)
+    if (window.matchMedia("(hover: hover)").matches) {
+        const magneticBtns = document.querySelectorAll('[data-magnetic]');
 
-    magneticBtns.forEach(btn => {
-        btn.addEventListener('mousemove', (e) => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
+        magneticBtns.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
 
-            btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+
+            btn.addEventListener('mouseenter', () => {
+                btn.classList.add('magnetic-active');
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                btn.classList.remove('magnetic-active');
+                btn.style.transform = 'translate(0, 0)';
+            });
         });
-
-        btn.addEventListener('mouseenter', () => {
-            btn.classList.add('magnetic-active');
-        });
-
-        btn.addEventListener('mouseleave', () => {
-            btn.classList.remove('magnetic-active');
-            btn.style.transform = 'translate(0, 0)';
-        });
-    });
+    }
 
     // Staggered Text Reveal Animation
     const revealElements = document.querySelectorAll('.reveal-text');
