@@ -32,8 +32,6 @@ Podés ver el proyecto en:
 
 🔗 [gracimarch.github.io/portfolio/](https://gracimarch.github.io/portfolio/)
 
-*(Si activás GitHub Pages podés reemplazar esto con el link del sitio online)*
-
 ---
 
 ## 📦 Instalación y uso
