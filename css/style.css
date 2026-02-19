@@ -550,15 +550,98 @@ h6 {
 .hamburger {
     display: none !important;
     cursor: pointer;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    /* Changed to flex to center content */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1001;
+}
+
+.hamburger:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-color);
 }
 
 .hamburger span {
     display: block;
-    width: 25px;
+    width: 24px;
     height: 2px;
-    margin: 5px;
     background-color: var(--text-main);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-radius: 2px;
+}
+
+/* Specific span adjustments for 'X' animation */
+.hamburger span:nth-child(1) {
+    width: 24px;
+}
+
+.hamburger span:nth-child(2) {
+    width: 16px;
+    /* Staggered width for style */
+    align-self: flex-end;
+    /* Align right */
+    margin-right: 18px;
+    /* Center visually in the column context */
+}
+
+.hamburger span:nth-child(3) {
+    width: 12px;
+    align-self: flex-end;
+    margin-right: 18px;
+}
+
+/* Fix alignment cause align-self + flex-column behaves differently than expected with specific widths. */
+/* Let's keep it simple and centered for the "X" transformation validity. */
+.hamburger span {
+    align-self: center !important;
+    margin: 0 !important;
+}
+
+/* Override the visual stagger for now to ensure reliable X */
+.hamburger span:nth-child(2) {
+    width: 24px;
+}
+
+.hamburger span:nth-child(3) {
+    width: 24px;
+}
+
+
+/* Toggle State (Active) */
+.hamburger.toggle {
+    background: var(--text-main);
+    border-color: var(--text-main);
+    transform: rotate(90deg);
+    /* Rotate the whole button */
+}
+
+.hamburger.toggle span {
+    background-color: var(--bg-color);
+    /* Invert color */
+}
+
+.hamburger.toggle span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.toggle span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.hamburger.toggle span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
 }
 
 @media (max-width: 768px) {
@@ -579,7 +662,7 @@ h6 {
     }
 
     .hamburger {
-        display: block !important;
+        display: flex !important;
         z-index: 1001;
     }
 
@@ -625,18 +708,6 @@ h6 {
 
     .nav-links.active li:nth-child(4) {
         animation-delay: 0.5s;
-    }
-
-    .hamburger.toggle .line1 {
-        transform: rotate(-45deg) translate(-5px, 6px);
-    }
-
-    .hamburger.toggle .line2 {
-        opacity: 0;
-    }
-
-    .hamburger.toggle .line3 {
-        transform: rotate(45deg) translate(-5px, -6px);
     }
 
     .cursor,
