@@ -30,7 +30,7 @@ Este repositorio contiene mi portfolio personal, donde presento proyectos, habil
 
 Podés ver el proyecto en:
 
-🔗 https://github.com/gracimarch/portfolio
+🔗 [gracimarch.github.io/portfolio/](https://gracimarch.github.io/portfolio/)
 
 *(Si activás GitHub Pages podés reemplazar esto con el link del sitio online)*
 
@@ -77,8 +77,8 @@ Construir una identidad digital que represente mis habilidades en desarrollo web
 
 ## 👩‍💻 Sobre mí
 
-* 🌍 GitHub: [https://github.com/gracimarch/](https://github.com/gracimarch/)
-* 💼 LinkedIn: [https://www.linkedin.com/in/gracimarch/](https://www.linkedin.com/in/gracimarch/)
+* 🌍 GitHub: [github.com/gracimarch/](https://github.com/gracimarch/)
+* 💼 LinkedIn: [www.linkedin.com/in/gracimarch/](https://www.linkedin.com/in/gracimarch/)
 * 📧 Email: [gracianamarch1@gmail.com](mailto:gracianamarch1@gmail.com)
 
 ---
