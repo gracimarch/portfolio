@@ -34,6 +34,15 @@ body {
     /* Custom cursor */
 }
 
+a,
+button,
+input,
+textarea,
+select,
+.hamburger {
+    cursor: none !important;
+}
+
 h1,
 h2,
 h3,
