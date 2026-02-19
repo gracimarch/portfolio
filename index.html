@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graciana March | Web Developer & Designer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">GM.</div>
+    </div>
+
+    <!-- Ambient Background -->
+    <div class="ambient-bg"></div>
+
+    <!-- Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo" data-magnetic>GM.</a>
+            <ul class="nav-links">
+                <li><a href="#about" data-magnetic>About</a></li>
+                <li><a href="#projects" data-magnetic>Projects</a></li>
+                <li><a href="#skills" data-magnetic>Skills</a></li>
+                <li><a href="#contact" data-magnetic>Contact</a></li>
+            </ul>
+            <div class="hamburger" data-magnetic>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="container">
+            <div class="reveal-text">
+                <h1 class="hero-title">Graciana March</h1>
+            </div>
+            <div class="reveal-text">
+                <h2 class="hero-subtitle">Web Developer & Designer</h2>
+            </div>
+            <div class="reveal-text">
+                <p class="hero-description">Designing elegant, interactive, and minimalist digital experiences.</p>
+            </div>
+            <a href="#projects" class="btn btn-primary" data-magnetic>View Work</a>
+        </div>
+        <div class="hero-background-elements">
+            <div class="glow-orb orb-1"></div>
+            <div class="glow-orb orb-2"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="reveal-text">
+                <h2 class="section-title">About Me</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="reveal-text">
+                        <p>I am a passionate developer focused on creating smooth, user-centric web experiences. My work
+                            blends technical expertise with a keen eye for modern design aesthetics.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <div class="reveal-text">
+                <h2 class="section-title">Selected Projects</h2>
+            </div>
+            <div class="projects-grid">
+                <!-- Project Card 1 -->
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Project One</h3>
+                        <p>A minimalist e-commerce platform.</p>
+                        <a href="#" class="project-link">View Project</a>
+                    </div>
+                </div>
+                <!-- Project Card 2 -->
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Project Two</h3>
+                        <p>Interactive portfolio dashboard.</p>
+                        <a href="#" class="project-link">View Project</a>
+                    </div>
+                </div>
+                <!-- Project Card 3 -->
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Project Three</h3>
+                        <p>Real-time data visualization app.</p>
+                        <a href="#" class="project-link">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+        <div class="container">
+            <div class="reveal-text">
+                <h2 class="section-title">Technical Skills</h2>
+            </div>
+            <div class="skills-wrapper">
+                <span class="skill-tag" data-magnetic>HTML5</span>
+                <span class="skill-tag" data-magnetic>CSS3</span>
+                <span class="skill-tag" data-magnetic>JavaScript (ES6+)</span>
+                <span class="skill-tag" data-magnetic>React</span>
+                <span class="skill-tag" data-magnetic>Node.js</span>
+                <span class="skill-tag" data-magnetic>UI/UX Design</span>
+                <span class="skill-tag" data-magnetic>Git</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <div class="reveal-text">
+                <h2 class="section-title">Get in Touch</h2>
+            </div>
+            <form class="contact-form">
+                <div class="form-group">
+                    <input type="text" id="name" required placeholder=" ">
+                    <label for="name">Name</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" required placeholder=" ">
+                    <label for="email">Email</label>
+                </div>
+                <div class="form-group">
+                    <textarea id="message" required placeholder=" "></textarea>
+                    <label for="message">Message</label>
+                </div>
+                <button type="submit" class="btn btn-primary" data-magnetic>Send Message</button>
+            </form>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/gracimarch/" target="_blank" class="social-link"
+                    data-magnetic>LinkedIn</a>
+                <a href="https://github.com/gracimarch" target="_blank" class="social-link" data-magnetic>GitHub</a>
+                <a href="mailto:gracianamarch1@gmail.com" class="social-link" data-magnetic>Email</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Graciana March. Built with minimalist precision.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
